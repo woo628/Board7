@@ -69,6 +69,7 @@ public class PdsController {
 		mv.addObject("menu_name", menu_name);
 		mv.addObject("searchDto", searchDto);
 		mv.addObject("totalcount", totalcount);
+		mv.addObject("pdsList", pdsList);
 		return mv;
 	}
 }

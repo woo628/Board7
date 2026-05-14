@@ -24,11 +24,11 @@
  	<h2>${menu_name} 자료실</h2>
  	<table class="table table-striped">
  	 <colgroup>
-        <col style="width: 7%;" />  <!-- 번호 -->
+        <col style="width: 10%;" />  <!-- 번호 -->
 	    <col style="width: 40%;" /> <!-- 제목 (조금 줄임) -->
 	    <col style="width: 15%;" /> <!-- 작성자 -->
 	    <col style="width: 10%;" />  <!-- 파일 (신규 추가) -->
-	    <col style="width: 18%;" /> <!-- 날짜 -->
+	    <col style="width: 15%;" /> <!-- 날짜 -->
 	    <col style="width: 10%;" /> <!-- 조회수 -->
    	 </colgroup>
  	 <tr>

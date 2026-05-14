@@ -20,4 +20,24 @@
 	  </where>
 	</select>
 	
+	<select id="getPdsList">
+	SELECT
+	    idx,
+	    menu_id,
+	    title,
+	    writer,
+	    (select count(FILE_NUM) from FILES F
+	        WHERE B.IDX = F.IDX) filescount,
+	    TO_CHAR(REGDATE,'YYYY-MM-DD') regdate,
+	    hit
+	FROM
+	    board B
+	<where>
+		<if test="menu_id != null and menu_id != ''"> AND MENU_ID = #{menu_id} </if>
+		<if test="searchType != null and searchType != '' and keyword != null and keyword != ''"> AND ${searchType} Like '%' || #{ keyword } || '%' </if>
+	</where>
+	ORDER BY idx desc
+	OFFSET #{offset} ROWS FETCH NEXT #{numOfRows} ROWS ONLY
+	</select>
+	
 </mapper>
