@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.board.mapper.BoardMapper">
+
+	<select id="getBoardList">
+		SELECT
+		    IDX,
+		    MENU_ID,
+		    TITLE,
+		    WRITER,
+		    TO_CHAR(REGDATE,'YYYY-MM-DD') REGDATE,
+		    HIT
+		FROM
+		    BOARD
+		WHERE
+	    MENU_ID = #{menu_id}
+		ORDER BY IDX DESC
+	</select>
+	
+	<select id="getBoard">
+		select * from Board where IDX = #{idx}
+	</select>
+	
+	<delete id="deleteBoard">
+		delete from Board where IDX = #{idx}
+	</delete>
+	
+	<update id="incHit">
+		update Board set hit = hit + 1 where IDX = #{idx}
+	</update>
+	
+	<insert id="insertboard">
+		insert into Board (IDX,MENU_ID,TITLE,CONTENT,WRITER) 
+		 values (
+		 (SELECT NVL( MAX(idx), 0) + 1 FROM Board),
+		 #{menu_id},#{title},#{content},#{writer})
+	</insert>
+	
+	<update id="updateBoard">
+		update Board set title = #{title}, content = #{content} where IDX = #{idx}
+	</update>
+	
+</mapper>
