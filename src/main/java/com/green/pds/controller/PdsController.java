@@ -40,7 +40,6 @@ public class PdsController {
 	@ModelAttribute("menu_name")
 	public String getMenuName(@RequestParam HashMap<String, Object> map) {
 	    String menu_id = (String) map.get("menu_id");
-	    
 	    // menu_id가 없을 경우를 대비한 방어 코드
 	    if (menu_id == null || menu_id.isEmpty()) {
 	        return "전체 목록"; 
@@ -49,8 +48,7 @@ public class PdsController {
 	}
 	
 	@RequestMapping("/List")
-	public ModelAndView list(@RequestParam HashMap<String, Object> map) {
-		
+	public ModelAndView list(@RequestParam HashMap<String, Object> map) {	
 		// 목록 조회 
 		int totalcount = pdsMapper.count(map); // 해당 메뉴의 전체 자료수
 		
@@ -70,7 +68,6 @@ public class PdsController {
 		
 		List<PdsDto> pdsList = pdsService.getPdsList(map);
 		
-		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("pds/list");
 		mv.addObject("map", map);	
@@ -86,25 +83,18 @@ public class PdsController {
 		// 넘겨줄 pdsdDto 정보를 idx로 조회
 		
 		// 넘겨줄 fileDto 정보를 idx로 조회
-		
-		
-
+	
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("pds/view");
 		mv.addObject("map", map);
-
 		return mv;
 	}
 	
 	@RequestMapping("/WriteForm")
 	public ModelAndView writeFrom(@RequestParam HashMap<String, Object> map) {
-	
-		List<MenuDTO> menuList = menuMapper.getMenuList();
-		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("pds/write");
-		mv.addObject("map", map);
-		mv.addObject("menuList", menuList);
+		mv.addObject("map", map);	
 		return mv;	
 	}
 	
