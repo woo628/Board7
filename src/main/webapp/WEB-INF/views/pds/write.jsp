@@ -50,12 +50,10 @@
   // 파일 입력창 추가
   	const btnAddFileEl = document.querySelector("#btnAddFile")
   	const tdfileEl = document.querySelector("#tdfile")
-  	let tag = '<input type="file" name="upfile" class="upfile" multiple><br>'
-  	let html = tdfileEl.innerHTML
   	btnAddFileEl.addEventListener('click', function() {
-		html += tag
-  		tdfileEl.innerHTML = html
-  	})
+  		const tag = '<input type="file" name="upfile" class="upfile" multiple><br>';
+        tdfileEl.insertAdjacentHTML('beforeend', tag);
+  	});
   // 입력항목 체크
 </script>
 </body>

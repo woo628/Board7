@@ -71,5 +71,17 @@
 	  </form>
  	<%@ include file="/WEB-INF/include/pagingpds.jsp" %>
  </main>
+<script>
+  let curSearchType = '${map.searchType}' 
+  const optionEls = document.querySelectorAll("option");
+  let index = 0;
+  switch (curSearchType) {
+	case "";
+	case "title" : index = 0; break;
+	case "content" : index = 1; break;
+	case "writer" : index = 2; break;
+  }
+	optionEls[index].selected = true;  
+</script>
 </body>
 </html>

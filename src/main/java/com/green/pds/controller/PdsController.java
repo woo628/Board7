@@ -8,10 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.green.board.dto.BoardDto;
-import com.green.board.mapper.BoardMapper;
 import com.green.menus.dto.MenuDTO;
 import com.green.menus.mapper.MenuMapper;
 import com.green.paging.dto.Pagination;
@@ -109,8 +108,19 @@ public class PdsController {
 		return mv;	
 	}
 	
-	
-	
+	@RequestMapping("/Write")
+	public ModelAndView write(@RequestParam HashMap<String, Object> map, @RequestParam(value="upfile") MultipartFile [] uploadfiles) {
+		String menu_id = String.valueOf(map.get("menu_id"));
+		int nowpage = Integer.parseInt(String.valueOf(map.get("nowpage")));
+		
+		pdsService.setWrite(map,uploadfiles);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Pds/List?menu_id=" + menu_id + "&nowpage=" + nowpage);
+		mv.addObject("map", map);
+		mv.addObject("uploadfiles", uploadfiles);		
+		return mv;		
+	}
 	
 	
 	
