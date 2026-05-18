@@ -1,13 +1,25 @@
 package com.green.pds.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,13 +27,19 @@ import com.green.menus.dto.MenuDTO;
 import com.green.menus.mapper.MenuMapper;
 import com.green.paging.dto.Pagination;
 import com.green.paging.dto.SearchDto;
+import com.green.pds.dto.FilesDto;
 import com.green.pds.dto.PdsDto;
 import com.green.pds.mapper.PdsMapper;
 import com.green.pds.service.PdsService;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping("/Pds")
 public class PdsController {
+	
+	@Value("${part1.upload-path}")
+	private String uploadPath;
 	
 	@Autowired
 	private MenuMapper menuMapper;
@@ -79,14 +97,18 @@ public class PdsController {
 	
 	@RequestMapping("/View")
 	public ModelAndView view(@RequestParam HashMap<String, Object> map) {
-		
+		// 조회수 증가
+		pdsService.setReadCountUpdate(map); // map: idx
 		// 넘겨줄 pdsdDto 정보를 idx로 조회
-		
+		PdsDto pds = pdsService.getPds(map);
 		// 넘겨줄 fileDto 정보를 idx로 조회
-	
+		List<FilesDto> fileList = pdsService.getFile(map);
+		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("pds/view");
 		mv.addObject("map", map);
+		mv.addObject("pds", pds);
+		mv.addObject("fileList", fileList);
 		return mv;
 	}
 	
@@ -112,6 +134,44 @@ public class PdsController {
 		return mv;		
 	}
 	
+	@RequestMapping("/filedownload/{file_num}")
+	@ResponseBody // data를 내려준다 / HttpServletResponse return 안해도됨
+	public void downloadFile(HttpServletResponse res, @PathVariable(value = "file_num") Long file_num) throws UnsupportedEncodingException {
+		FilesDto fileInfo = pdsService.getFileInfo(file_num);
+		// 다운로드 할 파일의 경로 생성
+		Path saveFilePath = Paths.get(uploadPath + File.separator + fileInfo.getSfilename());
+		// http 헤더 설정 (클라이언트 브라우저에 주는 정보)
+		setFileHeader(res, fileInfo);
+		// 파일을 복사 (실제 다운로드)
+		fileCopy(res, saveFilePath);
+	}
+
+	private void fileCopy(HttpServletResponse res, Path saveFilePath) {
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(saveFilePath.toFile());
+			FileCopyUtils.copy(fis,res.getOutputStream());
+			res.getOutputStream().flush(); // 남아있는 버퍼 초기화
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	finally {
+			try {
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+		}
+	}
+
+	private void setFileHeader(HttpServletResponse res, FilesDto fileInfo) throws UnsupportedEncodingException {
+		res.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode((String)fileInfo.getFilename(),"UTF-8") + "\";");
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		res.setHeader("Content-Type", "application/octet-stream; utf-8");
+		res.setHeader("Pragma", "no-cache;");
+		res.setHeader("Expires", "-1");
+	}
 	
 	
 	

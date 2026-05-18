@@ -49,16 +49,31 @@
 	</insert>
 	
 	<insert id="setFileWriter">
-    INSERT INTO Files (FILE_NUM, IDX, FILENAME, FILEEXT, SFILENAME)
-    <foreach collection="fileList" item="file" index="i" separator="UNION ALL">
-        SELECT 
-            (SELECT NVL(MAX(FILE_NUM), 0) FROM Files) + #{i} + 1,
-            (SELECT MAX(IDX) FROM Board),
-            #{file.filename}, 
-            #{file.fileext}, 
+    <foreach collection="fileList" item="file" index="i" open="INSERT ALL" close="SELECT * FROM DUAL" separator=" ">
+        INTO FILES VALUES (
+            ( SELECT NVL( MAX( FILE_NUM), 0) FROM FILES ) + #{i} + 1,
+            ( SELECT MAX( IDX ) FROM BOARD ),
+            #{file.filename},
+            #{file.fileext},
             #{file.sfilename}
-        FROM DUAL
+        )
     </foreach>
 	</insert>
+	
+	<update id="setReadCountUpdate">
+		update Board set hit = hit + 1 where IDX = #{idx}
+	</update>
+	
+	<select id="getPds">
+		select * from Board where idx = #{idx}
+	</select>
+	
+	<select id="getFile">
+		select * from Files where idx = #{idx}
+	</select>
+	
+	<select id="getFileInfo">
+		select * from Files where file_num = #{file_num}
+	</select>
 	
 </mapper>

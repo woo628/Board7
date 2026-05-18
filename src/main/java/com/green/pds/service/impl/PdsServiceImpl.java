@@ -44,4 +44,28 @@ public class PdsServiceImpl implements PdsService{
 		}
 	}
 
+	@Override
+	public void setReadCountUpdate(HashMap<String, Object> map) {
+		pdsMapper.setReadCountUpdate(map);
+	}
+
+	@Override
+	public PdsDto getPds(HashMap<String, Object> map) {
+		PdsDto pdsDto = pdsMapper.getPds(map);
+		return pdsDto;
+	}
+
+	@Override
+	public List<FilesDto> getFile(HashMap<String, Object> map) {
+		List<FilesDto> fileList = pdsMapper.getFile(map);
+		return fileList;
+	}
+
+	@Override
+	public FilesDto getFileInfo(Long file_num) {
+		FilesDto fileInfo = pdsMapper.getFileInfo(file_num);
+		return fileInfo;
+	}
+
+	
 }
