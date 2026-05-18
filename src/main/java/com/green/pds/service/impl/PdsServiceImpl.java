@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.green.pds.dto.FilesDto;
 import com.green.pds.dto.PdsDto;
 import com.green.pds.mapper.PdsMapper;
 import com.green.pds.service.PdsService;
@@ -34,7 +35,13 @@ public class PdsServiceImpl implements PdsService{
 		map.put("uploadPath", uploadPath);
 		PdsFile.save(map,uploadfiles);
 		// db저장
-		
+		// board table 저장
+		pdsMapper.setWrite(map); // insertBoard
+		// files table 저장
+		List<FilesDto> fileList = (List<FilesDto>) map.get("fileList");
+		if (fileList.size() > 0) {
+			pdsMapper.setFileWriter(map);
+		}
 	}
 
 }

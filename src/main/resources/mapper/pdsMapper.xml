@@ -40,4 +40,25 @@
 	OFFSET #{offset} ROWS FETCH NEXT #{numOfRows} ROWS ONLY
 	</select>
 	
+	<insert id="setWrite">
+		insert into Board 
+		(IDX,MENU_ID,TITLE,CONTENT,WRITER) 
+		values 
+		((SELECT NVL(MAX(idx), 0) + 1 FROM Board),
+		 #{menu_id},#{title},#{content},#{writer})
+	</insert>
+	
+	<insert id="setFileWriter">
+    INSERT INTO Files (FILE_NUM, IDX, FILENAME, FILEEXT, SFILENAME)
+    <foreach collection="fileList" item="file" index="i" separator="UNION ALL">
+        SELECT 
+            (SELECT NVL(MAX(FILE_NUM), 0) FROM Files) + #{i} + 1,
+            (SELECT MAX(IDX) FROM Board),
+            #{file.filename}, 
+            #{file.fileext}, 
+            #{file.sfilename}
+        FROM DUAL
+    </foreach>
+	</insert>
+	
 </mapper>
