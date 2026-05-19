@@ -10,11 +10,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -134,7 +137,7 @@ public class PdsController {
 		return mv;		
 	}
 	
-	@RequestMapping("/filedownload/{file_num}")
+	@GetMapping("/filedownload/{file_num}") // 데이터를 조회
 	@ResponseBody // data를 내려준다 / HttpServletResponse return 안해도됨
 	public void downloadFile(HttpServletResponse res, @PathVariable(value = "file_num") Long file_num) throws UnsupportedEncodingException {
 		FilesDto fileInfo = pdsService.getFileInfo(file_num);
@@ -173,9 +176,30 @@ public class PdsController {
 		res.setHeader("Expires", "-1");
 	}
 	
+	@RequestMapping("/Delete")
+	private ModelAndView delete(@RequestParam HashMap<String, Object> map) {
+		String menu_id = String.valueOf(map.get("menu_id"));
+		int nowpage = Integer.parseInt(String.valueOf(map.get("nowpage")));
+		pdsService.delete(map);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Pds/List?menu_id=" + menu_id + "&nowpage=" + nowpage);
+		mv.addObject("map", map);
+		return mv;
+	}
 	
-	
-	
+	@RequestMapping("/UpdateForm")
+	private ModelAndView updateform(@RequestParam HashMap<String, Object> map) {
+		PdsDto pds = pdsService.getPds(map);
+		List<FilesDto> fileList = pdsService.getFile(map);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("pds/update");
+		mv.addObject("map",map);
+		mv.addObject("pds", pds);
+		mv.addObject("fileList", fileList);
+		return mv;
+	}
 	
 	
 	

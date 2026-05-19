@@ -63,5 +63,17 @@ public class PdsFile {
         }
         return folderPath;
 	}
+	
+	// 실제 파일 삭제
+	public static void delete(String uploadPath, List<FilesDto> fileList) {
+		String path = uploadPath;
+		fileList.forEach((file) -> {
+			String sfile = file.getSfilename(); // 실제 저장된 파일 이름
+			File dFile = new File(path + sfile);
+			if (dFile.exists()) {
+				dFile.delete();
+			}
+		});
+	}
 
 }

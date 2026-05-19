@@ -76,4 +76,12 @@
 		select * from Files where file_num = #{file_num}
 	</select>
 	
+	<delete id="delete">
+		delete from Board where IDX = #{idx}
+	</delete>
+	
+	<delete id="filedelete">
+		delete from Files where IDX = #{idx}
+	</delete>
+	
 </mapper>
