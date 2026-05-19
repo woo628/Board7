@@ -17,17 +17,17 @@
   input[type=submit] {margin-right: 10px;}
   input[type=submit],input[type=button] {float: right;}
   input[name=title] {margin-bottom: 10px; padding: 5px;}
-  #btnDelteFile {margin-left: 10px;}
+  #f{margin-bottom: 10px; padding: 10px;}
   p {margin-bottom: 10px; margin-top: 10px; font-weight: bold;}
 </style>
 </head>
 <body>
  <main>
  	<%@include file = "/WEB-INF/include/menuspdspaging.jsp" %>
-   <form action="/Pds/Update" method="post">
+   <form action="/Pds/Update" method="post" enctype="multipart/form-data">
 	<h2>${menu_name} 수정</h2>
-    <input type="hidden" name="menu_id" value="${menu_id}">
-    <input type="hidden" name="idx" value="${map.idx}"> <!-- 또는 action에 /Update?idx=&{board.idx} -->
+    <input type="hidden" name="menu_id" value="${map.menu_id}">
+    <input type="hidden" name="idx" value="${map.idx}"> 
     <input type="hidden" name="nowpage" value="${map.nowpage}" />
     <table id="table1">
     	<tr>
@@ -52,14 +52,45 @@
    		<c:forEach var="file" items="${fileList}">
 	 			<div style="padding: 10px;">
 	 			<a href="/Pds/filedownload/${file.file_num}">${file.filename}</a>
-	 			<input type="button" id="btnDelteFile" value="삭제">
-	 			<input type="button" id="btnUpdateFile" value="수정">
+	 			<a href="/Pds/deletefile?file_num=${file.file_num}">X</a>
+	 			<input type="button" class="btnDeleteFile" value="삭제">
 	 			</div>
 	 	</c:forEach>
+   	 <div id="f">
+   	 <input type="button" id="btnAddFile" value="파일추가(최대 100MByte)">
+   	 <div id="tdfile"><input type="file" name="upfile" class="upfile" multiple><br></div> 
+   	 </div>
    	</div>
    	<a href="/Pds/List?menu_id=${map.menu_id}&nowpage=${map.nowpage}"><input type="button" value="돌아가기"></a>
    	<input type="submit" value="수정">
    </form>
  </main>
+<script>
+	const btnDeleteEl = document.querySelectorAll(".btnDeleteFile");
+	btnDeleteEl.forEach(btn => {
+		btn.addEventListener('click',function(){
+			this.parentElement.remove();
+		})
+	});
+	
+	const btnAddFileEl = document.querySelector("#btnAddFile")
+  	const tdfileEl = document.querySelector("#tdfile")
+  	btnAddFileEl.addEventListener('click', function() {
+  		const tag = '<input type="file" name="upfile" class="upfile" multiple><br>';
+        tdfileEl.insertAdjacentHTML('beforeend', tag);
+  	});
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

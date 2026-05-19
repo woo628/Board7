@@ -149,7 +149,7 @@ public class PdsController {
 		fileCopy(res, saveFilePath);
 	}
 
-	private void fileCopy(HttpServletResponse res, Path saveFilePath) {
+	public void fileCopy(HttpServletResponse res, Path saveFilePath) {
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(saveFilePath.toFile());
@@ -168,7 +168,7 @@ public class PdsController {
 		}
 	}
 
-	private void setFileHeader(HttpServletResponse res, FilesDto fileInfo) throws UnsupportedEncodingException {
+	public void setFileHeader(HttpServletResponse res, FilesDto fileInfo) throws UnsupportedEncodingException {
 		res.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode((String)fileInfo.getFilename(),"UTF-8") + "\";");
 		res.setHeader("Content-Transfer-Encoding", "binary");
 		res.setHeader("Content-Type", "application/octet-stream; utf-8");
@@ -177,7 +177,7 @@ public class PdsController {
 	}
 	
 	@RequestMapping("/Delete")
-	private ModelAndView delete(@RequestParam HashMap<String, Object> map) {
+	public ModelAndView delete(@RequestParam HashMap<String, Object> map) {
 		String menu_id = String.valueOf(map.get("menu_id"));
 		int nowpage = Integer.parseInt(String.valueOf(map.get("nowpage")));
 		pdsService.delete(map);
@@ -189,7 +189,7 @@ public class PdsController {
 	}
 	
 	@RequestMapping("/UpdateForm")
-	private ModelAndView updateform(@RequestParam HashMap<String, Object> map) {
+	public ModelAndView updateform(@RequestParam HashMap<String, Object> map) {
 		PdsDto pds = pdsService.getPds(map);
 		List<FilesDto> fileList = pdsService.getFile(map);
 		
@@ -201,7 +201,26 @@ public class PdsController {
 		return mv;
 	}
 	
+	@RequestMapping("/Update")
+	public ModelAndView update(@RequestParam HashMap<String, Object> map,@RequestParam(value="upfile") MultipartFile [] uploadfiles) {
+		pdsService.setUpdate(map,uploadfiles);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Pds/List?menu_id=" + map.get("menu_id") + "&nowpage=" + map.get("nowpage"));
+		mv.addObject("map", map);
+		mv.addObject("uploadfiles", uploadfiles);	
+		return mv;
+	}
 	
-	
-	
+	@RequestMapping("/deletefile")
+	public ModelAndView deletefile(@RequestParam HashMap<String, Object> map) {
+		String menu_id = String.valueOf(map.get("menu_id"));
+		int nowpage = Integer.parseInt(String.valueOf(map.get("nowpage")));
+		int idx = Integer.parseInt(String.valueOf(map.get("idx")));
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Pds/UpdateForm?idx=" + idx + "&menu_id=" + menu_id + "&nowpage=" + nowpage);
+		mv.addObject("map", map);
+		return mv;
+	}
 }

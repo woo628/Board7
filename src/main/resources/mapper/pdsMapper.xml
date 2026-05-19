@@ -84,4 +84,7 @@
 		delete from Files where IDX = #{idx}
 	</delete>
 	
+	<update id="update">
+		update Board set title = #{title}, content = #{content} where IDX = #{idx}
+	</update>
 </mapper>

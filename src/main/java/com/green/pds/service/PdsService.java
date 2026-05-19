@@ -25,4 +25,6 @@ public interface PdsService {
 
 	void delete(HashMap<String, Object> map);
 
+	void setUpdate(HashMap<String, Object> map, MultipartFile[] uploadfiles);
+	
 }

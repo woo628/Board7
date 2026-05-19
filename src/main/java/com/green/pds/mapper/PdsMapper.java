@@ -32,5 +32,7 @@ public interface PdsMapper {
 
 	void filedelete(HashMap<String, Object> map);
 
+	void update(HashMap<String, Object> map);
+
 
 }

@@ -76,5 +76,32 @@ public class PdsServiceImpl implements PdsService{
 		pdsMapper.delete(map); // 자료실 삭제
 	}
 
+	@Override
+	public void setUpdate(HashMap<String, Object> map, MultipartFile[] uploadfiles) {
+		// map에 저장
+		map.put("uploadPath",uploadPath);
+		// 업로드된 파일저장
+		PdsFile.save(map,uploadfiles);
+		// files 정보 저장
+		List<FilesDto> fileList = (List<FilesDto>) map.get("fileList");
+		if (fileList.size() > 0) {
+			pdsMapper.setFileWriter(map);
+		}
+		// board 정보 수정
+		pdsMapper.update(map);
+	}
+
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
