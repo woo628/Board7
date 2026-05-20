@@ -106,6 +106,11 @@ public class PdsController {
 		PdsDto pds = pdsService.getPds(map);
 		// 넘겨줄 fileDto 정보를 idx로 조회
 		List<FilesDto> fileList = pdsService.getFile(map);
+		if (pds.getContent() != null) {
+			String content = pds.getContent().replace("\n","<br>");
+			pds.setContent(content);
+		}
+		
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("pds/view");
@@ -212,15 +217,4 @@ public class PdsController {
 		return mv;
 	}
 	
-	@RequestMapping("/deletefile")
-	public ModelAndView deletefile(@RequestParam HashMap<String, Object> map) {
-		String menu_id = String.valueOf(map.get("menu_id"));
-		int nowpage = Integer.parseInt(String.valueOf(map.get("nowpage")));
-		int idx = Integer.parseInt(String.valueOf(map.get("idx")));
-		
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("redirect:/Pds/UpdateForm?idx=" + idx + "&menu_id=" + menu_id + "&nowpage=" + nowpage);
-		mv.addObject("map", map);
-		return mv;
-	}
 }

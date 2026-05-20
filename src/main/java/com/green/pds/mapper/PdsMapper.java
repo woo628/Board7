@@ -34,5 +34,7 @@ public interface PdsMapper {
 
 	void update(HashMap<String, Object> map);
 
+	void deleteupload(Long file_num);
+
 
 }

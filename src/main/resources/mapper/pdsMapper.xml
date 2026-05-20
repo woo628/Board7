@@ -80,6 +80,10 @@
 		delete from Board where IDX = #{idx}
 	</delete>
 	
+	<delete id="deleteupload">
+		delete from Files where file_num = #{file_num}
+	</delete>
+	
 	<delete id="filedelete">
 		delete from Files where IDX = #{idx}
 	</delete>

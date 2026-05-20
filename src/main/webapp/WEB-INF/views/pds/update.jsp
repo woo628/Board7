@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,8 +53,7 @@
    		<c:forEach var="file" items="${fileList}">
 	 			<div style="padding: 10px;">
 	 			<a href="/Pds/filedownload/${file.file_num}">${file.filename}</a>
-	 			<a href="/Pds/deletefile?file_num=${file.file_num}">X</a>
-	 			<input type="button" class="btnDeleteFile" value="삭제">
+	 			<a href="/deletefile/${file.file_num}" class="btnDeleteFile">x</a>			
 	 			</div>
 	 	</c:forEach>
    	 <div id="f">
@@ -68,8 +68,22 @@
 <script>
 	const btnDeleteEl = document.querySelectorAll(".btnDeleteFile");
 	btnDeleteEl.forEach(btn => {
-		btn.addEventListener('click',function(){
-			this.parentElement.remove();
+		btn.addEventListener('click',function(e){
+			
+			const aEl = e.target;
+			let loc = aEl.href;
+			fetch(loc)
+				.then((response) => response.json())
+				.then((json) => {
+					console.log(json)
+					//alert(json.status)
+					aEl.parentElement.remove();
+				})
+				.catch((error) => {
+					console.dir(error)
+				})			
+			e.preventDefault();
+			e.stopPropagation();
 		})
 	});
 	
